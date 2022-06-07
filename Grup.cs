@@ -2,6 +2,9 @@
 {
     public class Grup
     {
+        public event EventHandler<MessageEvent> MessageAlert;
+
+        private static EventHandler<MessageEvent> MessageEventUser;
         private string _name;
         private int _id;
         private List<int> let_id = new List<int>();
@@ -25,6 +28,13 @@
         {
             _id = id;
             _name = id.ToString();
+        }
+
+        public void AlertMessage(string messege)
+        {
+            MessageEventUser = MessageAlert;
+            if (MessageEventUser != null)
+                MessageEventUser(null, new MessageEvent(messege));
         }
 
         public string Get_name()
@@ -62,6 +72,15 @@
         {
             return let_id;
         }
+    }
 
+    public class MessageEvent : EventArgs
+    {
+        public string message;
+
+        public MessageEvent(string message)
+        {
+            this.message = message;
+        }
     }
 }

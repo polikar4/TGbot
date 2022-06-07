@@ -3,27 +3,33 @@
     public class User
     {
         public readonly bool _admin_root = true;
-        public readonly int _id;
         public readonly Grup _grup;
-        public readonly string _name_user;
+        public readonly Telegram.Bot.Types.Message _user;
         private Bot_logic bot_Logic;
 
-        public User(int id, Grup grup, string name_user)
+        public User(Telegram.Bot.Types.Message user, Grup grup)
         {
-            _id = id;
             _grup = grup;
+            _user = user;
             Send_To_Time.Send_Time += Send_debt;
-            _name_user = name_user;
             bot_Logic = new Bot_logic(this);
+            _grup.MessageAlert += AlertMessage;
+            
+        }
+
+        private void AlertMessage(object obj, MessageEvent messageEvent)
+        {
+            Program.Set_Messege(_user, messageEvent.message + "\nОт " + _user.From.FirstName + " " + _user.From.LastName);
         }
 
         public string Handler_message(string message)
         {
             return bot_Logic.Message(message);
         }
-        private void Send_debt(object obj, EventArgs EventArgs)
-        {
 
+        private void Send_debt(object obj, TimeEvent timeEvent)
+        {
+            //Console.WriteLine(timeEvent._time_hous.ToString()); 
         }
     }
 }

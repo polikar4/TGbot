@@ -12,6 +12,11 @@ namespace TGbot
     static class Program
     {
         private static ITelegramBotClient bot = new TelegramBotClient("5301941928:AAGNku_-noB7LNFOtAyKjxal34uaEMb8PHI");
+        public static void Set_Messege(Message message,string _message)
+        {
+            bot.SendTextMessageAsync(message.Chat, _message);
+        }
+
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
@@ -23,7 +28,7 @@ namespace TGbot
                 {
                     if (Have_Rules(user_id, out Grup grup))
                     {
-                        User _user = new User(user_id, grup, update.Message.From.Username);
+                        User _user = new User(update.Message, grup);
                         grup.Add_User(_user);
                         await botClient.SendTextMessageAsync(message.Chat, "Вы подключены к группе с названием " + grup.Get_name());
                     }
@@ -48,9 +53,12 @@ namespace TGbot
 
         static void Main(string[] args)
         {
+            Send_To_Time.UpdateAsync();
+
             Date.grups.Add(new Grup(228228228));
-            Date.grups[0].Add_User(new User(769964603, Date.grups[0], "Vadim" ));
-            Send_To_Time.UpdateAsync(); 
+            Date.grups[0].Add_let_id(762150197);
+            Date.grups[0].Add_let_id(769964603);
+            Date.grups[0].Add_let_id(425505411);
             Console.WriteLine("Запущен бот " + bot.GetMeAsync().Result.FirstName);
 
             var cts = new CancellationTokenSource();
@@ -72,7 +80,7 @@ namespace TGbot
         {
             foreach(Grup grup in Date.grups)
                 foreach (User user in grup.Get_User())
-                    if (user._id == id)
+                    if (user._user.From.Id == id)
                         return user;
             return null;
         }

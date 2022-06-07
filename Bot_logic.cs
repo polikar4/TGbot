@@ -17,7 +17,9 @@ namespace TGbot
             No_status = 0,
             Wtite_homework = 1,
             Grup_Edit = 2,
-            Add_User = 3
+            Add_User = 3,
+            My_info = 4,
+            Alert_message = 5
         }
         public Bot_logic(User user)
         {
@@ -50,12 +52,34 @@ namespace TGbot
                 case Status.Wtite_homework:
                     Write_homework();
                     break;
+
+                case Status.My_info:
+                    My_info();
+                    break;
+
+                case Status.Alert_message:
+                    Alert_message();
+                    break;
             }
 
             if (message == _message)
                 return "Нет такой команды /help";
             else
                 return _message;
+        }
+
+        private void Alert_message()
+        {
+            Perehod(Status.No_status);
+            if (_message == "Назад" || _nomber_mess == 2)
+            {
+                _message = "Вы отменили написание срочного сообщения\n\n" + _message;
+            }
+            else
+            {
+                _user._grup.AlertMessage(_message);
+                _message = "Вы написали срочное сообщение группе. Надеюсь за него вас анально не покарают\n\nd" + _message;
+            }
         }
 
 
@@ -76,10 +100,39 @@ namespace TGbot
             {
                 Perehod(Status.Grup_Edit);
             }
+            else if (_message == "Срочное сообщение группе" || _nomber_mess == 3)
+            {
+                if (_user._admin_root)
+                {
+                    Perehod(Status.Alert_message);
+                }
+                else
+                {
+                    Perehod(Status.No_status);
+                    _message = "У вас нет прав писать срочные сообщения\n\n" + _message;
+                }
+                    
+            }
+            else if (_message == "Обо мне" || _nomber_mess == 4)
+            {
+                Perehod(Status.My_info);
+            }
             else
                 Perehod(Status.No_status);
 
         }
+
+        private void My_info()
+        {
+            Perehod(Status.No_status);
+            string info = _user._user.From.FirstName + " " + _user._user.From.LastName + "\n"
+                + "Username - " + _user._user.From.Username + "\n"
+                + "Id - " + _user._user.From.Id.ToString() + "\n" 
+                + "Наличие прав админа - " + (_user._admin_root ? "Есть" : "Нет");
+
+            _message = info + "\n\n" + _message;
+        }
+
         private void Edit_grup()
         {
             if (_message == "Список группы" || _nomber_mess == 1)
@@ -89,8 +142,8 @@ namespace TGbot
                 int count = 1;
                 foreach (User user in _user._grup.Get_User())
                 {
-                    list += count.ToString() + ") " + user._name_user.ToString() + " id - "
-                        + user._id.ToString() + "  Aдмин - " +
+                    list += count.ToString() + ") " + user._user.From.Username + " id - "
+                        + user._user.From.Id.ToString() + "  Aдмин - " +
                         (_user._admin_root ? "Да" : "Нет") + "\n";
                     count++;
                 }
@@ -142,11 +195,11 @@ namespace TGbot
 
         private void Perehod(Status status)
         {
-            List<string> com_nostatus = new List<string> { "Группа", "Добавить задание"};
+            List<string> com_nostatus = new List<string> { "Группа", "Добавить задание", "Срочное сообщение группе", "Обо мне" };
             List<string> com_homework = new List<string> { "Введите дату", "Короткое описание задания", "Дополнительная информация" };
             List<string> com_grupedit = new List<string> { "Список группы ", "Добавить user", "Дать права админа", "Назад" };
-            List<string> com_adduser = new List<string> { "Напишите id пользователя", "Назад"};
-
+            List<string> com_adduser = new List<string> { "Напишите id пользователя или (Назад или 2)" };
+            List<string> com_alert = new List<string> { "Напишите срочное сообщение или (Назад или 2)" };
 
             switch (status) 
             {
@@ -169,19 +222,36 @@ namespace TGbot
                     _status = Status.Add_User;
                     Write_Command(com_adduser);
                     break;
+
+                case Status.My_info:
+                    _status = Status.My_info;
+                    My_info();
+                    break;
+
+                case Status.Alert_message:
+                    _status = Status.Alert_message;
+                    Write_Command(com_alert);
+                    break;
             }
         }
 
         private void Write_Command(List<string> strings)
         {
-            string str = "";
-            int i = 1;
-            foreach(string s in strings)
+            if (strings.Count == 1)
             {
-                str += i.ToString() + ") " + s + "\n";
-                i++;
+                _message = strings[0];
             }
-            _message = str;
+            else
+            {
+                string str = "";
+                int i = 1;
+                foreach (string s in strings)
+                {
+                    str += i.ToString() + ") " + s + "\n";
+                    i++;
+                }
+                _message = str;
+            }
         }
 
         private void No_realis()
