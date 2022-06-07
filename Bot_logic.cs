@@ -70,19 +70,19 @@ namespace TGbot
 
         private void Alert_message()
         {
-            Perehod(Status.No_status);
+            
             if (_message == "Назад" || _nomber_mess == 2)
             {
+                Perehod(Status.No_status);
                 _message = "Вы отменили написание срочного сообщения\n\n" + _message;
             }
             else
             {
                 _user._grup.AlertMessage(_message);
-                _message = "Вы написали срочное сообщение группе. Надеюсь за него вас анально не покарают\n\nd" + _message;
+                Perehod(Status.No_status);
+                _message = "Вы написали срочное сообщение группе. Надеюсь за него вас анально не покарают\n\n" + _message;
             }
         }
-
-
         private void No_status()
         {
             if (_message == "Добавить задание" || _nomber_mess == 2)
@@ -121,7 +121,6 @@ namespace TGbot
                 Perehod(Status.No_status);
 
         }
-
         private void My_info()
         {
             Perehod(Status.No_status);
@@ -132,7 +131,6 @@ namespace TGbot
 
             _message = info + "\n\n" + _message;
         }
-
         private void Edit_grup()
         {
             if (_message == "Список группы" || _nomber_mess == 1)
@@ -170,12 +168,12 @@ namespace TGbot
         private void Add_user()
         {
             int id = 0;
-            if (_message == "Назад" || _nomber_mess == 0)
+            if (_message == "Назад" || _nomber_mess == 2)
             {
                 Perehod(Status.Grup_Edit);
+                _message = "Вы отменили добавление пользователя в группу\n\n" + _message;
             }
-
-            if (int.TryParse(_message, out id))
+            else if (int.TryParse(_message, out id))
             {
                 Perehod(Status.Grup_Edit);
                 _user._grup.Add_let_id(id);
@@ -183,7 +181,7 @@ namespace TGbot
             }
             else
             {
-                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 0)";
+                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 2)";
             }
         }
         private void Write_homework()
