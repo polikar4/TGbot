@@ -23,13 +23,13 @@ namespace TGbot
            Console.WriteLine("Create vk bot");
         }
 
-        public  void StartProgtam()
+        public async Task StartProgtam()
         {
             Console.WriteLine("Start vk bot");
             while (true)
             {
-                Thread.Sleep(1000);
-                Task.Run(() => Resendler());
+                await Task.Delay(1000);
+                await Task.Run(() => Resendler());
             }
             
         }
@@ -37,11 +37,10 @@ namespace TGbot
 
         public void Resendler()
         {
-            Console.WriteLine("get message");
             object[] obj = GetMessage();
             if (obj != null)
             {
-                Console.WriteLine("set message");
+                Console.WriteLine(obj[2].ToString());
                 SengMessage(obj[0].ToString(), Convert.ToInt32(obj[2]), null);
             }
         }
