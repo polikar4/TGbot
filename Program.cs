@@ -55,6 +55,9 @@ namespace TGbot
         {
             Send_To_Time.UpdateAsync();
 
+            vkbot vk = new vkbot();
+            vk.StartProgtam();
+
             Date.grups.Add(new Grup(228228228));
             Date.grups[0].Add_let_id(762150197);
             Date.grups[0].Add_let_id(769964603);
