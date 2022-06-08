@@ -7,7 +7,8 @@
         private static EventHandler<MessageEvent> MessageEventUser;
         private string _name;
         private int _id;
-        private List<int> let_id = new List<int>();
+        private List<int> let_id_tg = new List<int>();
+        private List<int> let_id_vk = new List<int>();
         private List<HomeWork> _homes = new List<HomeWork>();
         private List<User> _user = new List<User>();
 
@@ -51,10 +52,14 @@
             _user.Add(user);
         }
 
-        public void Add_let_id(int id)
+        public void Add_let_id(int id, bool tg)
         {
-            let_id.Add(id);
+            if(tg)
+                let_id_tg.Add(id);
+            else
+                let_id_vk.Add(id);
         }
+
         public void Add_homework(string title, string messege, DateTime date)
         {
             _homes.Add(new HomeWork(title, messege, date));
@@ -62,15 +67,10 @@
 
         public bool Search_let_id(int _id)
         {
-            foreach (int id in let_id)
+            foreach (int id in let_id_tg)
                 if (id == _id)
                     return true;
             return false;
-        }
-
-        public List<int> Get_let_id()
-        {
-            return let_id;
         }
     }
 

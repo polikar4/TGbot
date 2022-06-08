@@ -176,7 +176,7 @@ namespace TGbot
             else if (int.TryParse(_message, out id))
             {
                 Perehod(Status.Grup_Edit);
-                _user._grup.Add_let_id(id);
+                _user._grup.Add_let_id(id, true);
                 _message = "Пользователь добавлен\n\n" + _message;
             }
             else
