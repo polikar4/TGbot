@@ -35,19 +35,25 @@ namespace TGbot
         }
 
 
-        public void Resendler()
+        public async void Resendler()
         {
-            object[] obj = GetMessage();
-            if (obj != null)
+            vkmess vkmessage = await GetMessage();
+            if (vkmessage.userid != 0)
             {
-                Console.WriteLine(obj[2].ToString());
-                SengMessage(obj[0].ToString(), Convert.ToInt32(obj[2]), null);
+                Program.Get_messageAsync(null, vkmessage);
+                
             }
+            /*
+            Console.WriteLine(vk.userid.ToString());
+            if(vk.userid != 0)
+                SengMessage(vk.message, vk.userid, null);
+            */
         }
 
 
         public void SengMessage(string message, long? userid, MessageKeyboard keyboard)
         {
+            
             vk.Messages.Send(new MessagesSendParams
             {
                 Message = message,
@@ -57,45 +63,41 @@ namespace TGbot
             });
         }
 
-        public object[] GetMessage()
+        public async Task<vkmess> GetMessage()
         {
-            string message = "";
-            string keyname = "";
-            long? userid = 0;
-
-
-              var messages = vk.Messages.GetDialogs(new MessagesDialogsGetParams
+            return await Get_mess(await vk.Messages.GetDialogsAsync(new MessagesDialogsGetParams
             {
                 Count = 1,
                 Unread = true
-            });
+            }));
+        }  
 
+        public async Task<vkmess> Get_mess(MessagesGetObject messages)
+        {
             if (messages.Messages.Count > 0)
             {
+
+                 string message = "";
+                 string keyname = "";
+                 long? userid = messages.Messages[0].UserId.Value;
+
+                vk.Messages.MarkAsRead(messages.Messages[0].UserId.Value.ToString());
 
                 if (messages.Messages[0].Body != null)
                     message = messages.Messages[0].Body.ToString();
                 else
                     message = "";
 
+
                 if (messages.Messages[0].Payload != null)
                     keyname = messages.Messages[0].Payload.ToString();
                 else
                     keyname = "";
 
-
-                    userid = messages.Messages[0].UserId.Value;
-                vk.Messages.MarkAsRead(userid.ToString());
-                return new object[3] { message, keyname, userid }; 
+                vkmess vkmessage = new vkmess(message, keyname, userid);
+                return vkmessage;
             }
-            else
-            {
-                return null;
-            }
-
-
+            return new vkmess("", "", 0);
         }
-
-        
     }
 }

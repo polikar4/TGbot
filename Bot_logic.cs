@@ -124,9 +124,9 @@ namespace TGbot
         private void My_info()
         {
             Perehod(Status.No_status);
-            string info = _user._user.From.FirstName + " " + _user._user.From.LastName + "\n"
-                + "Username - " + _user._user.From.Username + "\n"
-                + "Id - " + _user._user.From.Id.ToString() + "\n" 
+            string info = _user.FirstName + " " + _user.LastName + "\n"
+                + "Username - " + _user.UserName + "\n"
+                + "Id - " + _user.id_tg.ToString() + "\n" 
                 + "Наличие прав админа - " + (_user._admin_root ? "Есть" : "Нет");
 
             _message = info + "\n\n" + _message;
@@ -140,8 +140,8 @@ namespace TGbot
                 int count = 1;
                 foreach (User user in _user._grup.Get_User())
                 {
-                    list += count.ToString() + ") " + user._user.From.Username + " id - "
-                        + user._user.From.Id.ToString() + "  Aдмин - " +
+                    list += count.ToString() + ") " + user.UserName + " id - "
+                        + user.id_tg.ToString() + "  Aдмин - " +
                         (_user._admin_root ? "Да" : "Нет") + "\n";
                     count++;
                 }
