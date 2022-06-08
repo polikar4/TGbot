@@ -5,7 +5,11 @@ using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Exceptions;
-
+using VkNet;
+using VkNet.Model;
+using VkNet.Model.Keyboard;
+using VkNet.Model.RequestParams;
+using VkNet.Enums.Filters;
 
 namespace TGbot
 {
@@ -57,12 +61,14 @@ namespace TGbot
                             update.Message.From.LastName,
                             update.Message.From.Username,
                             (long)id, true, grup);
-
-                        
                     }
                     else
                     {
-
+                        var dateuser = vk.vk.Users.Get(new long[] { (long)id }).FirstOrDefault();
+                        user = new User(dateuser.FirstName,
+                            dateuser.LastName,
+                            dateuser.ScreenName,
+                            (long)id, true, grup);
                     }
                     grup.Add_User(user);
                     Set_Messege("Вы подключены к группе\n\n" + user.Handler_message("-1"), (long)id, tg_mess);

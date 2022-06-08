@@ -12,7 +12,7 @@ namespace TGbot
 {
     class vkbot
     {
-        private VkApi vk = new VkApi();
+        public readonly VkApi vk = new VkApi();
 
         public vkbot()
         {
