@@ -44,9 +44,9 @@ namespace TGbot
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
         }
 
-        public void Set_Messege(Chat chat, string _message)
+        public void Set_Messege(long id, string _message)
         {
-            bot.SendTextMessageAsync(chat, _message);
+            bot.SendTextMessageAsync(new ChatId(id), _message);
         }
 
     }
