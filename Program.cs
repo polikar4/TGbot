@@ -68,7 +68,7 @@ namespace TGbot
                         user = new User(dateuser.FirstName,
                             dateuser.LastName,
                             dateuser.ScreenName,
-                            (long)id, true, grup);
+                            (long)id, false, grup);
                     }
                     grup.Add_User(user);
                     Set_Messege("Вы подключены к группе\n\n" + user.Handler_message("-1"), (long)id, tg_mess);
@@ -89,27 +89,6 @@ namespace TGbot
             {
                 Set_Messege(user.Handler_message(message),(long)id, tg_mess);
             }
-
-            /*int user_id = (int)update.Message.From.Id;
-            Telegram.Bot.Types.Message message = update.Message;
-            
-            if (user == null)
-            {
-                if ()
-                {
-                    User _user = new User(update.Message, grup);
-                    grup.Add_User(_user);
-                    await tg.bot.SendTextMessageAsync(message.Chat, "Вы подключены к группе с названием " + grup.Get_name());
-                }
-                else
-                    await tg.bot.SendTextMessageAsync(message.Chat, "Ваш id - " + user_id.ToString() +
-                        "\nНа данный момент вы не числетись не в одной группе" +
-                        "\nОтправте управляющим вашей группы ваш id");
-            }
-            else
-            {
-                await tg.bot.SendTextMessageAsync(message.Chat, user.Handler_message(message.Text));
-            }*/
         }
 
         public static void Set_Messege(string _message, long id, bool tg_mess)

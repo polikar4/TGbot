@@ -28,7 +28,10 @@
 
         private void AlertMessage(object obj, MessageEvent messageEvent)
         {
-            Program.Set_Messege( messageEvent.message + "\nОт " + FirstName + " " + LastName, id_tg, true);
+            if(id_tg != -1)
+                Program.Set_Messege( messageEvent.message, id_tg, true);
+            if (id_vk != -1)
+                Program.Set_Messege(messageEvent.message, id_vk, false);
         }
 
         public string Handler_message(string message)

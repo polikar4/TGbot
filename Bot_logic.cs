@@ -78,7 +78,7 @@ namespace TGbot
             }
             else
             {
-                _user._grup.AlertMessage(_message);
+                _user._grup.AlertMessage(_message +"\n от "+ _user.FirstName + " " + _user.LastName);
                 Perehod(Status.No_status);
                 _message = "Вы написали срочное сообщение группе. Надеюсь за него вас анально не покарают\n\n" + _message;
             }
