@@ -15,12 +15,14 @@ namespace TGbot
         enum Status
         {
             No_status = 0,
-            Wtite_homework = 1,
+            Task = 1,
             Grup_Edit = 2,
             Add_User = 3,
             Alert_message = 5,
             Aboutme = 6,
-            Set_id = 7
+            Set_id = 7,
+            Add_HomeWork_grup = 8,
+            Add_HomeWork_me = 9
         }
         public Bot_logic(User user)
         {
@@ -50,8 +52,8 @@ namespace TGbot
                     No_status();
                     break;
 
-                case Status.Wtite_homework:
-                    Write_homework();
+                case Status.Task:
+                    Task();
                     break;
 
                 case Status.Alert_message:
@@ -65,10 +67,19 @@ namespace TGbot
                 case Status.Set_id:
                     Set_id();
                     break;
+
+                case Status.Add_HomeWork_grup:
+                    Add_HomeWork_grup();
+                    break;
+
+                case Status.Add_HomeWork_me:
+                    Add_HomeWork_me();
+                    break;
             }
 
             if (message == _message)
-                return "Нет такой команды /help";
+                return "Если ты видешь это сообщение, это значит ты нашёл дырку в машине состояний. Рекомендую написать @polikar4"+
+                    "\nПриложи скрин как ты дошёл до этого состояния, желательно последние 10-15 команд";
             else
                 return _message;
         }
@@ -96,7 +107,6 @@ namespace TGbot
                 _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 2)";
             }
         }
-
         private void Aboutme()
         {
             string info = _user.FirstName + " " + _user.LastName + "\n"
@@ -135,7 +145,6 @@ namespace TGbot
                 Perehod(Status.No_status);
             }
         }
-
         private void Alert_message()
         {
             
@@ -153,11 +162,11 @@ namespace TGbot
         }
         private void No_status()
         {
-            if (_message == "Добавить задание" || _nomber_mess == 2)
+            if (_message == "Задания" || _nomber_mess == 2)
             {
                 if (_user.userStatus > 0)
                 {
-                    Perehod(Status.Wtite_homework);
+                    Perehod(Status.Task);
                 }
                 else
                 {
@@ -197,7 +206,6 @@ namespace TGbot
                 Perehod(Status.No_status);
 
         }
-
         private void Edit_grup()
         {
             if (_message == "Список группы" || _nomber_mess == 1)
@@ -258,22 +266,60 @@ namespace TGbot
                 _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 2)";
             }
         }
-        private void Write_homework()
+        private void Add_HomeWork_grup()
         {
-            Console.WriteLine(_message);
-            Perehod(Status.No_status);
-            _message = "Добавленно\n\n" + _message;
+            if (_message == "Назад" || _nomber_mess == 2)
+            {
+                Perehod(Status.Task);
+                _message = "Вы отменили написание задания \n\n" + _message;
+            }
+            _user._grup.Add_homework_Grup(_message, "Kek", new DateTime(2023, 01, 01));
+            Perehod(Status.Task);
+        }
+        private void Add_HomeWork_me()
+        {
+            if (_message == "Назад" || _nomber_mess == 2)
+            {
+                Perehod(Status.Task);
+                _message = "Вы отменили написание задания \n\n" + _message;
+            }
+            _user._grup.Add_homework_ls(_message, "Kek", new DateTime(2023, 01, 01),_user);
+            Perehod(Status.Task);
+        }
+        private void Task()
+        {
+            if (_message == "Список заданий" || _nomber_mess == 1)
+            {
+                Perehod(Status.Task);
+                _message = _user._grup.Get_Homework(_user) + "\n\n" + _message;
+            }
+            else if (_message == "Добавить задание группе" || _nomber_mess == 2)
+            {
+                Perehod(Status.Add_HomeWork_grup);
+            }
+            else if (_message == "Добавить задание себе" || _nomber_mess == 3)
+            {
+                Perehod(Status.Add_HomeWork_me);
+            }
+            else if (_message == "Назад" || _nomber_mess == 4)
+            {
+                Perehod(Status.No_status);
+            }
         }
 
         private void Perehod(Status status)
         {
-            List<string> com_nostatus = new List<string> { "Группа", "Добавить задание", "Срочное сообщение группе", "Обо мне" };
-            List<string> com_homework = new List<string> { "Введите дату", "Короткое описание задания", "Дополнительная информация" };
+            List<string> com_nostatus = new List<string> { "Группа", "Задания", "Срочное сообщение группе", "Обо мне" };
+            List<string> com_homework = new List<string> { "Список заданий", "Добавить задание группе", "Добавить задание себе", "Назад" };
             List<string> com_grupedit = new List<string> { "Список группы ", "Добавить user", "Дать права админа", "Назад" };
             List<string> com_adduser = new List<string> { "Напишите id пользователя или (Назад или 2)" };
             List<string> com_alert = new List<string> { "Напишите срочное сообщение или (Назад или 2)" };
             List<string> com_aboutme = new List<string> { "Добавть tg id", "Добавть vk id", "Назад"};
             List<string> com_setid = new List<string> { "Напишите id пользователя или (Назад или 2)" };
+            List<string> Add_HomeWork_grup = new List<string> { "Напишите задание группе или (Назад или 2)" };
+            List<string> Add_HomeWork_me = new List<string> { "Напишите задание себе или (Назад или 2)" };
+
+
             switch (status) 
             {
                 case Status.No_status:
@@ -281,8 +327,8 @@ namespace TGbot
                     Write_Command(com_nostatus);
                     break;
 
-                case Status.Wtite_homework:
-                    _status = Status.Wtite_homework;
+                case Status.Task:
+                    _status = Status.Task;
                     Write_Command(com_homework);
                     break;
 
@@ -309,6 +355,16 @@ namespace TGbot
                 case Status.Set_id:
                     _status = Status.Set_id;
                     Write_Command(com_setid);
+                    break;
+
+                case Status.Add_HomeWork_grup:
+                    _status = Status.Add_HomeWork_grup;
+                    Write_Command(Add_HomeWork_grup);
+                    break;
+
+                case Status.Add_HomeWork_me:
+                    _status = Status.Add_HomeWork_me;
+                    Write_Command(Add_HomeWork_me);
                     break;
             }
         }
