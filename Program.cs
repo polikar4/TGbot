@@ -31,6 +31,7 @@ namespace TGbot
             Date.grups[0].Add_let_id(769964603);
             Date.grups[0].Add_let_id(425505411);
             Date.grups[0].Add_let_id(340275666);
+            Date.grups[0].Add_let_id(166832150);
 
             Console.ReadLine();
         }
@@ -103,7 +104,7 @@ namespace TGbot
         {
             foreach(Grup grup in Date.grups)
                 foreach (User user in grup.Get_User())
-                    if (user.id_tg == id)
+                    if (user.id_tg == id || user.id_vk == id)
                         return user;
             return null;
         }

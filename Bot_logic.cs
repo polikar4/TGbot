@@ -272,9 +272,52 @@ namespace TGbot
             {
                 Perehod(Status.Task);
                 _message = "Вы отменили написание задания \n\n" + _message;
+                return;
             }
-            _user._grup.Add_homework_Grup(_message, "Kek", new DateTime(2023, 01, 01));
+            string[] text = _message.Split('\n');
+            if (text.Length == 2)
+            {
+                string[] date = text[0].Split('.');
+                if (date.Length == 2)
+                {
+                    int year = 0;
+                    if (DateTime.Now < new DateTime(DateTime.Now.Year, int.Parse(date[1]), int.Parse(date[0])))
+                        year = DateTime.Now.Year;
+                    else
+                        year = DateTime.Now.Year + 1;
+                    _user._grup.Add_homework_Grup(text[1], "", new DateTime(year, int.Parse(date[1]), int.Parse(date[0])));
+                    Perehod(Status.Task);
+                    _message = "Задание создано\n" + _message;
+                    return;
+                }
+
+                Perehod(Status.Task);
+                _message = "Неверный ввод задания" + _message;
+                return;
+            }
+            if (text.Length == 3)
+            {
+                string[] date = text[0].Split('.');
+                if(date.Length == 2)
+                {
+                    int year = 0;
+                    if(DateTime.Now < new DateTime(DateTime.Now.Year, int.Parse(date[1]),int.Parse(date[0]) ))
+                        year = DateTime.Now.Year;
+                    else
+                        year = DateTime.Now.Year + 1;
+                    _user._grup.Add_homework_Grup(text[1], text[2], new DateTime(year, int.Parse(date[1]), int.Parse(date[0])));
+                    Perehod(Status.Task);
+                    _message = "Задание создано\n" + _message;
+                    return;
+                }
+
+                Perehod(Status.Task);
+                _message = "Неверный ввод задания" + _message;
+                return;
+            }
             Perehod(Status.Task);
+            _message = "Неверный ввод задания" + _message;
+            return;
         }
         private void Add_HomeWork_me()
         {
@@ -296,14 +339,26 @@ namespace TGbot
             else if (_message == "Добавить задание группе" || _nomber_mess == 2)
             {
                 Perehod(Status.Add_HomeWork_grup);
+                _message = "Напишите задание в видеn\n" +
+                   "Дата в формате день.месяц\n" +
+                   "Краткое описание задания\n" +
+                   "Более детальное описание (при необходимости можно не писать)\n\n";
             }
             else if (_message == "Добавить задание себе" || _nomber_mess == 3)
             {
                 Perehod(Status.Add_HomeWork_me);
+                _message = "Напишите задание в видеn\n" +
+                    "Дата в формате день.месяц\n" +
+                    "Краткое описание задания\n" +
+                    "Более детальное описание (при необходимости можно не писать)\n\n";
             }
             else if (_message == "Назад" || _nomber_mess == 4)
             {
                 Perehod(Status.No_status);
+            }
+            else
+            {
+                Perehod(Status.Task);
             }
         }
 

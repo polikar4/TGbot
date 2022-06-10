@@ -14,6 +14,11 @@
             _date = new DateTime(_date.Year, _date.Month, _date.Day);
         }
 
+        public string Get_date()
+        {
+            return _date.Day.ToString() + "." + _date.Month.ToString();
+        }
+
         public string Get_title()
         {
             return _title;
@@ -71,7 +76,8 @@
             {
                 if (homeWork.PresenceUser(user))
                 {
-                    homework += count.ToString() + ") " + homeWork.Get_title() + "\n";
+                    homework += count.ToString() + ") " + homeWork.Get_date() + " " 
+                        + homeWork.Get_title() + "\n";
                     count++;
                 }
             }
