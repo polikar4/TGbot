@@ -18,8 +18,9 @@ namespace TGbot
             Wtite_homework = 1,
             Grup_Edit = 2,
             Add_User = 3,
-            My_info = 4,
-            Alert_message = 5
+            Alert_message = 5,
+            Aboutme = 6,
+            Set_id = 7
         }
         public Bot_logic(User user)
         {
@@ -53,12 +54,16 @@ namespace TGbot
                     Write_homework();
                     break;
 
-                case Status.My_info:
-                    My_info();
-                    break;
-
                 case Status.Alert_message:
                     Alert_message();
+                    break;
+
+                case Status.Aboutme:
+                    Aboutme();
+                    break;
+
+                case Status.Set_id:
+                    Set_id();
                     break;
             }
 
@@ -66,6 +71,69 @@ namespace TGbot
                 return "Нет такой команды /help";
             else
                 return _message;
+        }
+
+        private void Set_id()
+        {
+            long id = 0;
+            if (_message == "Назад" || _nomber_mess == 2)
+            {
+                Perehod(Status.Aboutme);
+                _message = "Вы отменили добавление пользователя в группу\n\n" + _message;
+            }
+            else if (long.TryParse(_message, out id))
+            {
+                Perehod(Status.Aboutme);
+                if (_user.id_tg == -1)
+                    _user.id_tg = id;
+                else
+                    _user.id_vk = id;
+
+                _message = "Пользователь добавлен\n\n" + _message;
+            }
+            else
+            {
+                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 2)";
+            }
+        }
+
+        private void Aboutme()
+        {
+            string info = _user.FirstName + " " + _user.LastName + "\n"
+                + "Username - " + _user.UserName + "\n"
+                + "Id telegram - " + _user.id_tg.ToString() + "\n"
+                + "Id vk - " + _user.id_vk.ToString() + "\n"
+                + "Роль - " + _user.userStatus.ToString();
+
+            //"Добавть tg id", "Добавть vk id", "Назад"
+            if (_message == "Добавть tg id" || _nomber_mess == 1)
+            {
+                if(_user.id_tg != -1)
+                {
+                    Perehod(Status.Aboutme);
+                    _message = "У вас уже добавлен tg id\n\n" + _message;
+                }
+                else
+                {
+                    Perehod(Status.Set_id);
+                }
+            }
+            else if (_message == "Добавть vk id" || _nomber_mess == 2)
+            {
+                if (_user.id_vk != -1)
+                {
+                    Perehod(Status.Aboutme);
+                    _message = "У вас уже добавлен vk id\n\n" + _message;
+                }
+                else
+                {
+                    Perehod(Status.Set_id);
+                } 
+            }
+            else if (_message == "Назад" || _nomber_mess == 3)
+            {
+                Perehod(Status.No_status);
+            }
         }
 
         private void Alert_message()
@@ -87,7 +155,7 @@ namespace TGbot
         {
             if (_message == "Добавить задание" || _nomber_mess == 2)
             {
-                if (_user._admin_root)
+                if (_user.userStatus > 0)
                 {
                     Perehod(Status.Wtite_homework);
                 }
@@ -102,7 +170,7 @@ namespace TGbot
             }
             else if (_message == "Срочное сообщение группе" || _nomber_mess == 3)
             {
-                if (_user._admin_root)
+                if (_user.userStatus > 0)
                 {
                     Perehod(Status.Alert_message);
                 }
@@ -115,34 +183,40 @@ namespace TGbot
             }
             else if (_message == "Обо мне" || _nomber_mess == 4)
             {
-                Perehod(Status.My_info);
+                string info = _user.FirstName + " " + _user.LastName + "\n"
+                + "Username - " + _user.UserName + "\n"
+                + "Id telegram - " + _user.id_tg.ToString() + "\n"
+                + "Id vk - " + _user.id_vk.ToString() + "\n"
+                + "Роль - " + _user.userStatus.ToString();
+
+                Perehod(Status.Aboutme);
+
+                _message = info + "\n\n" + _message; 
             }
             else
                 Perehod(Status.No_status);
 
         }
-        private void My_info()
-        {
-            Perehod(Status.No_status);
-            string info = _user.FirstName + " " + _user.LastName + "\n"
-                + "Username - " + _user.UserName + "\n"
-                + "Id - " + _user.id_tg.ToString() + "\n" 
-                + "Наличие прав админа - " + (_user._admin_root ? "Есть" : "Нет");
 
-            _message = info + "\n\n" + _message;
-        }
         private void Edit_grup()
         {
             if (_message == "Список группы" || _nomber_mess == 1)
             {
+                string rol = "";
+                if (_user.userStatus == UserStatus.user)
+                    rol = "User";
+                if (_user.userStatus == UserStatus.moder)
+                    rol = "Moder";
+                if (_user.userStatus == UserStatus.admin)
+                    rol = "Admin";
                 Perehod(Status.No_status);
                 string list = "";
                 int count = 1;
                 foreach (User user in _user._grup.Get_User())
                 {
-                    list += count.ToString() + ") " + user.UserName + " id - "
-                        + user.id_tg.ToString() + "  Aдмин - " +
-                        (_user._admin_root ? "Да" : "Нет") + "\n";
+                    list += count.ToString() + ") " + user.LastName + " id - "
+                        + user.id_tg.ToString() + "  Роль - " +
+                         rol + "\n";
                     count++;
                 }
                 Perehod(Status.Grup_Edit);
@@ -198,7 +272,8 @@ namespace TGbot
             List<string> com_grupedit = new List<string> { "Список группы ", "Добавить user", "Дать права админа", "Назад" };
             List<string> com_adduser = new List<string> { "Напишите id пользователя или (Назад или 2)" };
             List<string> com_alert = new List<string> { "Напишите срочное сообщение или (Назад или 2)" };
-
+            List<string> com_aboutme = new List<string> { "Добавть tg id", "Добавть vk id", "Назад"};
+            List<string> com_setid = new List<string> { "Напишите id пользователя или (Назад или 2)" };
             switch (status) 
             {
                 case Status.No_status:
@@ -221,14 +296,19 @@ namespace TGbot
                     Write_Command(com_adduser);
                     break;
 
-                case Status.My_info:
-                    _status = Status.My_info;
-                    My_info();
-                    break;
-
                 case Status.Alert_message:
                     _status = Status.Alert_message;
                     Write_Command(com_alert);
+                    break;
+
+                case Status.Aboutme:
+                    _status = Status.Aboutme;
+                    Write_Command(com_aboutme);
+                    break;
+
+                case Status.Set_id:
+                    _status = Status.Set_id;
+                    Write_Command(com_setid);
                     break;
             }
         }

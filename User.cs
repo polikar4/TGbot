@@ -1,15 +1,23 @@
 ﻿namespace TGbot
 {
+    public enum UserStatus
+    {
+        user = 1,
+        moder = 2,
+        admin = 3
+    }
+
     public class User
     {
-        public readonly bool _admin_root = true;
+        public readonly UserStatus userStatus;
         public readonly Grup _grup;
         public readonly string FirstName = "", LastName = "", UserName = "";
-        public readonly long id_tg = -1, id_vk = -1;
+        public long id_tg = -1, id_vk = -1;
         private Bot_logic bot_Logic;
 
         public User(string FirstName, string LastName, string UserName, long id, bool tg_mess, Grup grup)
         {
+            userStatus = UserStatus.admin;
             _grup = grup;
             this.FirstName = FirstName;
             this.LastName = LastName;
@@ -24,14 +32,19 @@
             bot_Logic = new Bot_logic(this);
         }
 
-        
-
         private void AlertMessage(object obj, MessageEvent messageEvent)
         {
-            if(id_tg != -1)
-                Program.Set_Messege( messageEvent.message, id_tg, true);
-            if (id_vk != -1)
+            try
+            {
+                if (id_tg != -1)
+                    Program.Set_Messege(messageEvent.message, id_tg, true);
+            } catch {}
+
+            try
+            {
+                if (id_vk != -1)
                 Program.Set_Messege(messageEvent.message, id_vk, false);
+            } catch { }
         }
 
         public string Handler_message(string message)
