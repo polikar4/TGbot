@@ -4,15 +4,23 @@
     {
         private string _title = "", _message = "";
         private DateTime _date = new DateTime();
-        private List<User> _users = new List<User>();
-        public HomeWork(string title, string messege, DateTime date, List<User> users)
+        private List<int> _id_tg = new List<int>();
+        private List<int> _id_vk = new List<int>();
+
+        public HomeWork(string title, string messege, DateTime date, List<User> user)
         {
-            _users = users;
+            foreach(User us in user) {
+                _id_tg.Add((int)us.id_tg);
+                _id_vk.Add((int)us.id_vk);
+            }
+            _id_tg.RemoveAll(delegate (int i) { return i == -1; });
+            _id_vk.RemoveAll(delegate (int i) { return i == -1; });
             _title = title;
             _message = messege;
             _date = date;
             _date = new DateTime(_date.Year, _date.Month, _date.Day);
         }
+
 
         public string Get_date()
         {
@@ -26,9 +34,14 @@
 
         public bool PresenceUser(User user)
         {
-            foreach (User item in _users)
+            foreach (int id in _id_tg)
             {
-                if (item == user)
+                if (id == user.id_tg)
+                    return true;
+            }
+            foreach (int id in _id_vk)
+            {
+                if (id == user.id_vk)
                     return true;
             }
             return false;
@@ -36,7 +49,8 @@
 
         public HomeWork(string title, string messege, DateTime date, User user)
         {
-            _users.Add(user);
+            _id_tg.Add((int)user.id_tg);
+            _id_vk.Add((int)user.id_vk);
             _title = title;
             _message = messege;
             _date = date;
