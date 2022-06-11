@@ -19,6 +19,7 @@ namespace TGbot
                 string name_grup = sr.ReadLine().Split("=")[1];
                 List<int> let_id = new List<int>();
                 List<HomeWork> home_work = new List<HomeWork>();
+                List<User> users = new List<User>();
 
                 if (sr.ReadLine() == "{ let id")
                 {
@@ -79,33 +80,18 @@ namespace TGbot
                         if (mess != "{")
                             break;
 
-                        UserStatus stat = new UserStatus();
-                        string message = sr.ReadLine();
-                        DateTime dateTime = ToDate(sr.ReadLine().Split(" ")[0].Split("."));
-                        List<int> id_vk = new List<int>();
-                        List<int> id_tg = new List<int>();
-
-                        while (true)
-                        {
-                            string id = sr.ReadLine();
-                            if (id == "}")
-                                break;
-                            if (id == "{")
-                                continue;
-                            id_vk.Add(Convert.ToInt32(id));
-                        }
-                        while (true)
-                        {
-                            string id = sr.ReadLine();
-                            if (id == "}")
-                                break;
-                            if (id == "{")
-                                continue;
-                            id_tg.Add(Convert.ToInt32(id));
-                        }
-
-                        h
+                        UserStatus stat = (UserStatus)Convert.ToInt32(sr.ReadLine());
+                        string name = sr.ReadLine();
+                        string fam = sr.ReadLine();
+                        string username = sr.ReadLine();
+                        int id_tg = Convert.ToInt32(sr.ReadLine());
+                        int id_vk = Convert.ToInt32(sr.ReadLine());
+                        users.Add(new User(stat, grups[grups.Count - 1],name,fam,username,id_tg,id_vk));
+                        mess = sr.ReadLine();
+                    }
                 }
+                grups[grups.Count - 1].Add_users(users);
+                sr.Close();
             }
             //one grup = one .txt
             //for grups
@@ -169,7 +155,7 @@ namespace TGbot
                     //{ userStatus, FirstName, LastName , UserName , id_tg, id_vk }
                     object[] us = user.Get_date_to_Base();
                     sw.WriteLine("{");
-                    sw.WriteLine(us[0]);
+                    sw.WriteLine(((int)us[0]));
                     sw.WriteLine(us[1]);
                     sw.WriteLine(us[2]);
                     sw.WriteLine(us[3]);

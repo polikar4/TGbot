@@ -15,6 +15,18 @@
         public long id_tg = -1, id_vk = -1;
         private Bot_logic bot_Logic;
 
+        public User(UserStatus userStatus, Grup grup, string firstName, string lastName, string userName, long id_tg, long id_vk)
+        {
+            this.userStatus = userStatus;
+            _grup = grup;
+            FirstName = firstName;
+            LastName = lastName;
+            UserName = userName;
+            this.id_tg = id_tg;
+            this.id_vk = id_vk;
+            bot_Logic = new Bot_logic(this);
+        }
+
         public User(string FirstName, string LastName, string UserName, long id, bool tg_mess, Grup grup)
         {
             userStatus = UserStatus.admin;

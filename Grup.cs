@@ -23,6 +23,8 @@
         {
             return _date.Day.ToString() + "." + _date.Month.ToString();
         }
+
+
         public string Get_title()
         {
             return _title;
@@ -33,6 +35,8 @@
         }
         public bool PresenceUser(User user)
         {
+            return true;
+            /*
             foreach (int id in _id_tg)
             {
                 if (id == user.id_tg)
@@ -43,7 +47,7 @@
                 if (id == user.id_vk)
                     return true;
             }
-            return false;
+            return false;*/
         }
         public HomeWork(string title, string messege, DateTime date, User user)
         {
@@ -87,6 +91,10 @@
             _id = id;
             this.let_id = let_id;
             _homes = homes;
+        }
+        public void Add_users(List<User> users)
+        {
+            _user = users;
         }
 
         public void AlertMessage(string messege)

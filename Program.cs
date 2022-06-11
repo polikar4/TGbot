@@ -38,6 +38,7 @@ namespace TGbot
             {
                 Console.ReadLine();
                 Date.Save_base();
+                Console.WriteLine("save base");
             }
         }
 
