@@ -32,6 +32,11 @@
             return _title;
         }
 
+        public object[] Get_date_to_Base()
+        {
+            return new object[5] { _title, _message, _date, _id_tg, _id_vk };
+        }
+
         public bool PresenceUser(User user)
         {
             foreach (int id in _id_tg)
@@ -46,7 +51,6 @@
             }
             return false;
         }
-
         public HomeWork(string title, string messege, DateTime date, User user)
         {
             _id_tg.Add((int)user.id_tg);
@@ -56,7 +60,6 @@
             _date = date;
             _date = new DateTime(_date.Year, _date.Month, _date.Day);
         }
-
     }
 
     public class Grup
@@ -80,6 +83,11 @@
             MessageEventUser = MessageAlert;
             if (MessageEventUser != null)
                 MessageEventUser(null, new MessageEvent(messege));
+        }
+
+        public object[] Get_date_to_Base()
+        {
+            return new object[5] { _name, _id, let_id, _homes, _user};
         }
 
         public string Get_Homework(User user)

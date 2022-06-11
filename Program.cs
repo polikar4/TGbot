@@ -19,6 +19,7 @@ namespace TGbot
         static tgbot tg;
         static void Main(string[] args)
         {
+            Date.Load_base();
             Send_To_Time.UpdateAsync(); // Event time
 
             vk = new vkbot(); // Start vk bot
@@ -33,7 +34,11 @@ namespace TGbot
             Date.grups[0].Add_let_id(340275666);
             Date.grups[0].Add_let_id(166832150);
 
-            Console.ReadLine();
+            while (true)
+            {
+                Console.ReadLine();
+                Date.Save_base();
+            }
         }
 
         public static async Task Get_messageAsync(Update update, vkmess vkmessage)

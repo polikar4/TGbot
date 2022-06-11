@@ -1,6 +1,6 @@
 ﻿namespace TGbot
 {
-    public enum UserStatus
+    public enum UserStatus 
     {
         user = 1,
         moder = 2,
@@ -30,6 +30,11 @@
             Send_To_Time.Send_Time += Send_debt; // Подписываемся на события 
             _grup.MessageAlert += AlertMessage;
             bot_Logic = new Bot_logic(this);
+        }
+
+        public object[] Get_date_to_Base()
+        {
+            return new object[6] { userStatus, FirstName, LastName , UserName , id_tg, id_vk };
         }
 
         private void AlertMessage(object obj, MessageEvent messageEvent)
