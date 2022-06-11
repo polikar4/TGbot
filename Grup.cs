@@ -1,12 +1,11 @@
 ﻿namespace TGbot
 {
-    struct HomeWork
+    public struct HomeWork
     {
         private string _title = "", _message = "";
         private DateTime _date = new DateTime();
         private List<int> _id_tg = new List<int>();
         private List<int> _id_vk = new List<int>();
-
         public HomeWork(string title, string messege, DateTime date, List<User> user)
         {
             foreach(User us in user) {
@@ -20,23 +19,18 @@
             _date = date;
             _date = new DateTime(_date.Year, _date.Month, _date.Day);
         }
-
-
         public string Get_date()
         {
             return _date.Day.ToString() + "." + _date.Month.ToString();
         }
-
         public string Get_title()
         {
             return _title;
         }
-
         public object[] Get_date_to_Base()
         {
             return new object[5] { _title, _message, _date, _id_tg, _id_vk };
         }
-
         public bool PresenceUser(User user)
         {
             foreach (int id in _id_tg)
@@ -60,6 +54,15 @@
             _date = date;
             _date = new DateTime(_date.Year, _date.Month, _date.Day);
         }
+
+        public HomeWork(string title, string messege, DateTime date, List<int> idvk, List<int> idtg)
+        {
+            _title = title;
+            _message = messege;
+            _date = date;
+            _id_vk = idvk;
+            _id_tg = idtg;
+        }
     }
 
     public class Grup
@@ -76,6 +79,14 @@
         {
             _id = id;
             _name = id.ToString();
+        }
+
+        public Grup(string name, int id, List<int> let_id, List<HomeWork> homes)
+        {
+            _name = name;
+            _id = id;
+            this.let_id = let_id;
+            _homes = homes;
         }
 
         public void AlertMessage(string messege)

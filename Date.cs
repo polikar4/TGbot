@@ -10,8 +10,103 @@ namespace TGbot
         public static void Load_base()
         {
             string[] files = Directory.GetFiles(directory);
-            foreach(string file in files)
+            foreach (string file in files)
+            {
                 Console.WriteLine(file);
+                StreamReader sr = new StreamReader(file);
+
+                int id_grup = Convert.ToInt32(sr.ReadLine().Split("=")[1]);
+                string name_grup = sr.ReadLine().Split("=")[1];
+                List<int> let_id = new List<int>();
+                List<HomeWork> home_work = new List<HomeWork>();
+
+                if (sr.ReadLine() == "{ let id")
+                {
+                    string let_id_str = sr.ReadLine();
+                    while(let_id_str != "} end let id")
+                    {
+                        let_id.Add(Convert.ToInt32(let_id_str));
+                        let_id_str = sr.ReadLine();
+                    }
+                }
+
+                if(sr.ReadLine() == "{ homeworks")
+                {
+                    while (true)
+                    {
+                        string mess = sr.ReadLine();
+                        if (mess != "{")
+                            break;   
+
+                        string title = sr.ReadLine();
+                        string message = sr.ReadLine();
+                        DateTime dateTime = ToDate(sr.ReadLine().Split(" ")[0].Split("."));
+                        List<int> id_vk = new List<int>();
+                        List<int> id_tg = new List<int>();
+
+                        while (true)
+                        {
+                            string id = sr.ReadLine();
+                            if (id == "}")
+                                break;
+                            if (id == "{")
+                                continue;
+                            id_vk.Add(Convert.ToInt32(id));
+                        }
+                        while (true)
+                        {
+                            string id = sr.ReadLine();
+                            if (id == "}")
+                                break;
+                            if (id == "{")
+                                continue;
+                            id_tg.Add(Convert.ToInt32(id));
+                        }
+
+                        home_work.Add(new HomeWork(title, message, dateTime, id_vk, id_tg));
+                    }
+                }
+                string mess12132 = sr.ReadLine();
+
+                grups.Add(new Grup(name_grup, id_grup, let_id, home_work));
+
+
+                if( sr.ReadLine() == "{ user")
+                {
+                    while (true)
+                    {
+                        string mess = sr.ReadLine();
+                        if (mess != "{")
+                            break;
+
+                        UserStatus stat = new UserStatus();
+                        string message = sr.ReadLine();
+                        DateTime dateTime = ToDate(sr.ReadLine().Split(" ")[0].Split("."));
+                        List<int> id_vk = new List<int>();
+                        List<int> id_tg = new List<int>();
+
+                        while (true)
+                        {
+                            string id = sr.ReadLine();
+                            if (id == "}")
+                                break;
+                            if (id == "{")
+                                continue;
+                            id_vk.Add(Convert.ToInt32(id));
+                        }
+                        while (true)
+                        {
+                            string id = sr.ReadLine();
+                            if (id == "}")
+                                break;
+                            if (id == "{")
+                                continue;
+                            id_tg.Add(Convert.ToInt32(id));
+                        }
+
+                        h
+                }
+            }
             //one grup = one .txt
             //for grups
                 //create grup (id, name, letid)
@@ -19,6 +114,15 @@ namespace TGbot
                 //add homeworks in grup
                 //cteate list users (roll, first-last-username, vk-tg id, grup) 
                 //add users in grup
+
+        }
+
+        private static DateTime ToDate(string[] a)
+        {
+            int day = Convert.ToInt32(a[0]);
+            int monu = Convert.ToInt32(a[1]);
+            int year = Convert.ToInt32(a[2]);
+            return new DateTime(year, monu, day);
         }
 
         public static void Save_base()
@@ -27,7 +131,7 @@ namespace TGbot
             {
                 object[] date = grup.Get_date_to_Base(); // { _name, _id, let_id, _homes, _user};
 
-                StreamWriter sw = new StreamWriter(directory + date[1] + ".txt");
+                StreamWriter sw = new StreamWriter(directory + @"\" + date[1] + ".txt");
                 
                 sw.WriteLine("id grup =" + date[1].ToString());    // id 
                 sw.WriteLine("name grup =" + (string)date[0]); // name
