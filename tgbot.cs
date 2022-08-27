@@ -1,11 +1,7 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
-using Telegram.Bot.Exceptions;
-
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TGbot
 {
@@ -24,7 +20,7 @@ namespace TGbot
             {
                 AllowedUpdates = { }, // receive all update types
             };
-
+            
             bot.StartReceiving(
                 HandleUpdateAsync,
                 HandleErrorAsync,
@@ -37,6 +33,8 @@ namespace TGbot
         {
             await Program.Get_messageAsync(update, new vkmess("","",0));
         }
+        
+        
 
         public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
@@ -46,7 +44,12 @@ namespace TGbot
 
         public void Set_Messege(long id, string _message)
         {
-            bot.SendTextMessageAsync(new ChatId(id), _message);
+
+            List<InlineKeyboardButton> buttons = new();
+            for (int nomber = 0; nomber < 10; nomber++)
+                if (_message.Contains(nomber.ToString() + ")"))
+                    buttons.Add(InlineKeyboardButton.WithCallbackData(nomber.ToString(), nomber.ToString()));
+            bot.SendTextMessageAsync(new ChatId(id), _message, replyMarkup: new InlineKeyboardMarkup(buttons));
         }
 
     }

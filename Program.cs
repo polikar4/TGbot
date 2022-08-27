@@ -44,9 +44,12 @@ namespace TGbot
 
         public static async Task Get_messageAsync(Update update, vkmess vkmessage)
         {
-            if (update != null && update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
+            if (update != null)
             {
-                Treatment_message(update.Message.From.Id, update.Message.Text, true, update);
+                if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
+                    Treatment_message(update.Message.From.Id, update.Message.Text, true, update);
+                else if(update.Type == Telegram.Bot.Types.Enums.UpdateType.CallbackQuery)
+                    Treatment_message(update.CallbackQuery.From.Id, update.CallbackQuery.Data.ToString(), true, update);
             }
             else
             {

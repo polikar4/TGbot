@@ -87,7 +87,7 @@ namespace TGbot
         private void Set_id()
         {
             long id = 0;
-            if (_message == "Назад" || _nomber_mess == 2)
+            if (_message == "Назад" || _nomber_mess == 0)
             {
                 Perehod(Status.Aboutme);
                 _message = "Вы отменили добавление пользователя в группу\n\n" + _message;
@@ -104,7 +104,7 @@ namespace TGbot
             }
             else
             {
-                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 2)";
+                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или \"0)\")";
             }
         }
         private void Aboutme()
@@ -148,7 +148,7 @@ namespace TGbot
         private void Alert_message()
         {
             
-            if (_message == "Назад" || _nomber_mess == 2)
+            if (_message == "Назад" || _nomber_mess == 0)
             {
                 Perehod(Status.No_status);
                 _message = "Вы отменили написание срочного сообщения\n\n" + _message;
@@ -250,7 +250,7 @@ namespace TGbot
         private void Add_user()
         {
             int id = 0;
-            if (_message == "Назад" || _nomber_mess == 2)
+            if (_message == "Назад" || _nomber_mess == 0)
             {
                 Perehod(Status.Grup_Edit);
                 _message = "Вы отменили добавление пользователя в группу\n\n" + _message;
@@ -263,12 +263,12 @@ namespace TGbot
             }
             else
             {
-                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или 2)";
+                _message = "Не верный id, введите ещё раз или выйдите в окно (Написать Назад или \"0)\")";
             }
         }
         private void Add_HomeWork_grup()
         {
-            if (_message == "Назад" || _nomber_mess == 2)
+            if (_message == "Назад" || _nomber_mess == 0)
             {
                 Perehod(Status.Task);
                 _message = "Вы отменили написание задания \n\n" + _message;
@@ -321,7 +321,7 @@ namespace TGbot
         }
         private void Add_HomeWork_me()
         {
-            if (_message == "Назад" || _nomber_mess == 2)
+            if (_message == "Назад" || _nomber_mess == 0)
             {
                 Perehod(Status.Task);
                 _message = "Вы отменили написание задания \n\n" + _message;
@@ -367,12 +367,12 @@ namespace TGbot
             List<string> com_nostatus = new List<string> { "Группа", "Задания", "Срочное сообщение группе", "Обо мне" };
             List<string> com_homework = new List<string> { "Список заданий", "Добавить задание группе", "Добавить задание себе", "Назад" };
             List<string> com_grupedit = new List<string> { "Список группы ", "Добавить user", "Дать права админа", "Назад" };
-            List<string> com_adduser = new List<string> { "Напишите id пользователя или (Назад или 2)" };
-            List<string> com_alert = new List<string> { "Напишите срочное сообщение или (Назад или 2)" };
+            List<string> com_adduser = new List<string> { "Напишите id пользователя или (Назад или \"0)\")" };
+            List<string> com_alert = new List<string> { "Напишите срочное сообщение или (Назад или \"0)\")" };
             List<string> com_aboutme = new List<string> { "Добавть tg id", "Добавть vk id", "Назад"};
-            List<string> com_setid = new List<string> { "Напишите id пользователя или (Назад или 2)" };
-            List<string> Add_HomeWork_grup = new List<string> { "Напишите задание группе или (Назад или 2)" };
-            List<string> Add_HomeWork_me = new List<string> { "Напишите задание себе или (Назад или 2)" };
+            List<string> com_setid = new List<string> { "Напишите id пользователя или (Назад или \"0)\")" };
+            List<string> Add_HomeWork_grup = new List<string> { "Напишите задание группе или (Назад или \"0)\")" };
+            List<string> Add_HomeWork_me = new List<string> { "Напишите задание себе или (Назад или \"0)\")" };
 
 
             switch (status) 
